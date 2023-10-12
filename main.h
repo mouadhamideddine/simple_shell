@@ -3,7 +3,9 @@
 
 int _putchar(char c);
 void _puts(char *str);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+int _strlen(char *s);
+char *_strcpy(char *dest, char *src);
+void *_realloc(void *ptr, int old_size, int new_size);
 char *_strdup(char *str);
 
 #endif
