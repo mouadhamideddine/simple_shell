@@ -1,0 +1,10 @@
+#!/bin/bash
+# add
+git add .
+
+# commit the changes with a prompt for a commit message
+read -p "Enter commit message: " message
+git commit -m "$message"
+
+# push the changes
+git push
