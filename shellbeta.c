@@ -1,14 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "main.h"
+
+extern char** environ;
+
 int main(void)
 {
 	char *input = NULL,*token = NULL;
 	size_t input_size = 0;
 	char delimiters[] = " ";
-	char **tokenized_input = NULL;
-	int i = 0, j = 0;
+	char **tokenized_input = NULL, *test[10];
+	int i = 0, j = 1, k =0;
 
 	while (1)
 	{
@@ -28,13 +32,18 @@ int main(void)
 			i++;
 			token = strtok(NULL, delimiters);
 		}
-
-		for (j = 0; j < i; j++)
+		test[0] = tokenized_input[0];
+		while (tokenized_input[j])
 		{
-			printf("Token %d: %s\n", j, tokenized_input[j]);
-			free(tokenized_input[j]);
+			test[k] = tokenized_input[j];
+			k++;
+			j++;
 		}
-
+		test[k] = "\0";
+		if(execve("/bin/ls", test, environ) == -1)
+		{
+			printf("execve %s %s ", tokenized_input[0], tokenized_input[1]);
+		}
 		free(tokenized_input);
 		tokenized_input = NULL;
 		i = 0;
