@@ -1,15 +1,15 @@
-#include "main.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/wait.h> 
+#include <sys/wait.h>
+#include "main.h"
 /**
  * 
 */
 extern char **environ;
 
-int execute(char **argv)
+int execute(char **token_array, char **argv)
 {
     pid_t pid;
     int status;
@@ -22,19 +22,19 @@ int execute(char **argv)
     }
     else if (pid == 0)
     {
-        if(execve(argv[0], argv, environ) == -1)
+        if(execve(token_array[0], token_array, environ) == -1)
         {
-            perror("EXECVE ERROR");
+            perror(argv[0]);
+            free_array(token_array); //HWC
+            //token_array = NULL;
             exit(EXIT_FAILURE);
         }
     }
     else
     {
-        if(wait(&status) == -1)
-        {
-            perror("WAIT ERROR");
-            exit(EXIT_FAILURE);
-        }
+        waitpid(pid, &status, 0);
+        //free_array(token_array); //HWC
+        //token_array = NULL;
     }
-    return (0);
+    return (WEXITSTATUS(status));
 }
