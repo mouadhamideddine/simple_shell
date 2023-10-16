@@ -1,5 +1,11 @@
-#include "main.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include "main.h"
+
 /**
  * _strlen - calculate str length
  * @s : string
@@ -28,7 +34,7 @@ char *_strcpy(char *dest, char *src)
 	int l = 0;
 	int x = 0;
 
-	while (*(src + l) != '\0')
+	while (src[l] != '\0')
 	{
 		l++;
 	}
@@ -65,10 +71,6 @@ char *_strdup(char *str)
 	_strcpy(dupl, str);
 	return (dupl);
 }
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "main.h"
 
 char** tokenizeline(char* input, char* delimiters)
 {
@@ -80,36 +82,51 @@ char** tokenizeline(char* input, char* delimiters)
     
     str_copy = _strdup(input);
     token = strtok(str_copy, delimiters);
-    while(token)
+    while(token != NULL)
     {
         count_token++;
         token = strtok(NULL, delimiters);
     }
-    tokenized_input = malloc(sizeof(char *) * count_token);
-    free(str_copy);
-    str_copy = NULL;
-    str_copy = _strdup(input);
-    token = strtok(str_copy, delimiters);
-    while (token)
+    if (count_token > 0)
     {
-        tokenized_input[i] = _strdup(token);
-        token = strtok(NULL, delimiters);
-        i++;
+        free(str_copy);
+        str_copy = NULL;
+        str_copy = _strdup(input);
+        token = strtok(str_copy, delimiters);// this
+    } 
+    if (token != NULL)
+    {
+        tokenized_input = malloc(sizeof(char *) * (count_token + 1)); //removed the +1 
+        while (token)
+        {
+            tokenized_input[i] = _strdup(token);
+            token = strtok(NULL, delimiters);
+            i++;
+        }
     }
 
     free(str_copy);
     str_copy = NULL;
     return (tokenized_input);
 } 
-#include "main.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h> 
-/**
- * 
-*/
+int free_array(char **array)
+{
+    int i = 0;
+
+    if (array == NULL)
+    {
+        return (0);
+    }
+
+    while(array[i])
+    {
+        free(array[i]);
+        array[i] = NULL;
+        i++;
+    }
+    free(array);
+    return (0);
+}
 extern char **environ;
 
 int execute(char **argv)
@@ -125,10 +142,13 @@ int execute(char **argv)
     }
     else if (pid == 0)
     {
-        if(execve(argv[0], argv, environ) == -1)
+        if (argv != NULL)
         {
-            perror("EXECVE ERROR");
-            exit(-1);
+            if(execve(argv[0], argv, environ) == -1)
+            {
+                perror("EXECVE ERROR");
+                exit(EXIT_FAILURE);
+            }
         }
     }
     else
@@ -136,25 +156,10 @@ int execute(char **argv)
         if(wait(&status) == -1)
         {
             perror("WAIT ERROR");
-            exit(-1);
+            exit(EXIT_FAILURE);
         }
     }
     return (0);
-}
-#include <stdio.h>
-#include <stdlib.h>
-
-int free_array(char ***array_ptr)
-{
-    char **array = *array_ptr;
-    int i = 0;
-    while (array[i] != NULL) {
-        free(array[i]);
-        i++;
-    }
-    free(array);
-    *array_ptr = NULL;
-    return(0);
 }
 
 int main(void)
@@ -166,23 +171,25 @@ int main(void)
 	char **tokenized_input = NULL;
 	char *path = NULL;
 	int status = 0;
+	int read;
 
 	while (1)
 	{
 		write(STDOUT_FILENO,dollar,2);
-
-		if (getline(&input, &input_size, stdin) == -1)
+		read = getline(&input, &input_size, stdin);
+		if (read < 0)
 		{
 			free(input);
-			return (status);
+			return(status);
 		}
 		tokenized_input = tokenizeline(input, delimiters);
-		/*printf("%s",tokenized_input[0]);*/
+		//printf("tokenized_input%s", tokenized_input[0]);
 		execute(tokenized_input);
-		free_array(&tokenized_input);
+		free_array(tokenized_input);
+		//free(input);
 		tokenized_input = NULL;
 	}
-
-	free(input);
-	return (0);
+	//free(input);
+	printf("this");
+	return (status);
 }

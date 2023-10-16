@@ -19,21 +19,23 @@ int main(void)
 	{
 		write(STDOUT_FILENO,dollar,2);
 		read = getline(&input, &input_size, stdin);
-		//printf("%d", read);
 		if (read == -1)
 		{
 			free(input);
 			return(status);
 		}
-		if (read > 0){
 		tokenized_input = tokenizeline(input, delimiters);
 		//printf("tokenized_input%s", tokenized_input[0]);
-		execute(tokenized_input);
+		if (tokenized_input != NULL)
+		{
+			execute(tokenized_input);
+		}
 		free_array(tokenized_input);
-		tokenized_input = NULL;}
+		//free(input);
+		tokenized_input = NULL;
 	}
-
-	free(input);
+	//free(input);
+	printf("this");
 	return (status);
 }
 

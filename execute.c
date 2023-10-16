@@ -22,13 +22,10 @@ int execute(char **argv)
     }
     else if (pid == 0)
     {
-        if (argv != NULL)
+        if(execve(argv[0], argv, environ) == -1)
         {
-            if(execve(argv[0], argv, environ) == -1)
-            {
-                perror("EXECVE ERROR");
-                exit(-1);
-            }
+            perror("EXECVE ERROR");
+            exit(EXIT_FAILURE);
         }
     }
     else
@@ -36,7 +33,7 @@ int execute(char **argv)
         if(wait(&status) == -1)
         {
             perror("WAIT ERROR");
-            exit(-1);
+            exit(EXIT_FAILURE);
         }
     }
     return (0);
