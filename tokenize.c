@@ -13,22 +13,31 @@ char** tokenizeline(char* input, char* delimiters)
     
     str_copy = _strdup(input);
     token = strtok(str_copy, delimiters);
-    while(token)
+    while(token != NULL)
     {
         count_token++;
         token = strtok(NULL, delimiters);
     }
-    tokenized_input = malloc(sizeof(char *) * count_token);
-    free(str_copy);
-    str_copy = _strdup(input);
-    token = strtok(str_copy, delimiters);
-    while (token)
+    if (count_token > 0)
     {
-        tokenized_input[i] = _strdup(token);
-        token = strtok(NULL, delimiters);
-        i++;
+        free(str_copy);
+        str_copy = NULL;
+        str_copy = _strdup(input);
+        token = strtok(str_copy, delimiters);// this
+    } 
+    if (token != NULL)
+    {
+        tokenized_input = malloc(sizeof(char *) * count_token + 1); //removed the +1 
+        while (token)
+        {
+            tokenized_input[i] = _strdup(token);
+            token = strtok(NULL, delimiters);
+            i++;
+        }
     }
 
     free(str_copy);
+    str_copy = NULL;
+    printf("tokenize");
     return (tokenized_input);
 } 
