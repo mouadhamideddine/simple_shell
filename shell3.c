@@ -1,14 +1,15 @@
 #include "main.h"
 /**
- * print2DArray - Print a 2D array of strings
- * @arr: The 2D array
+ * print2DArray -strings
+ * @arr:array
  */
 void print2DArray(char ***arr)
 {
 	int row = 0;
+	int col = 0;
+
 	while (arr[row] != NULL)
 	{
-		int col = 0;
 		while (arr[row][col] != NULL)
 		{
 			printf("2D%s \n", arr[row][col]);
@@ -20,10 +21,10 @@ void print2DArray(char ***arr)
 }
 
 /**
- * tokenize_path - Tokenize a string using ':' as the delimiter
- * @fullpath: The full path string
- * @user_input: User input string
- * Return: Tokenized array of strings
+ * tokenize_path -delimiter
+ * @fullpath: string
+ * @user_input: string
+ * Return: strings
  */
 char **tokenize_path(char *fullpath, char *user_input)
 {
@@ -35,12 +36,12 @@ char **tokenize_path(char *fullpath, char *user_input)
 
 	if (fullpath == NULL)
 	{
-		return NULL;
+		return (NULL);
 	}
-	
+
 	path_copy = _strdup(fullpath);
 	token = strtok(path_copy, ":");
-	
+
 	while (token != NULL)
 	{
 		count_token++;
@@ -48,10 +49,11 @@ char **tokenize_path(char *fullpath, char *user_input)
 	}
 	free(path_copy);
 	path_copy = NULL;
-	tokenized_fullpath = malloc(sizeof(char *) * (count_token + 1)); /* for NULL */
+	tokenized_fullpath =
+		malloc(sizeof(char *) * (count_token + 1));
 	if (tokenized_fullpath == NULL)
-	{
-		return NULL;
+{
+		return (NULL);
 	}
 	path_copy = _strdup(fullpath);
 	token = strtok(path_copy, ":");
@@ -64,58 +66,57 @@ char **tokenize_path(char *fullpath, char *user_input)
 	}
 	tokenized_fullpath[i] = NULL;
 	free(path_copy);
-	path_copy = NULL;
-	/* free(fullpath); reason it's environ[i] */
-	/* fullpath = NULL; reason it's environ[i] */
-	return tokenized_fullpath; /* a tokenized full path ready for access */
+	path_copy = (NULL);
+	return (tokenized_fullpath); /* a tokenized full path ready for access */
 }
 
 /**
- * is_path - Check if a string represents a path
- * @input: The string to check
- * Return: 1 if it's a path, 0 if it's not
+ * is_path - Check
+ * @input: check
+ * Return: path
  */
 int is_path(char *input)
 {
 	int i = 0;
+
 	if (!input)
 	{
-		return -1; /* Invalid input */
+		return (-1); /* Invalid input */
 	}
 	while (input[i])
 	{
 		if (input[i] == '\\' || (input[i] == '/'))
 		{
-			return 1; /* Path */
+			return (1); /* Path */
 		}
 		i++;
 	}
-	return 0; /* Not a path */
+	return (0); /* Not a path */
 }
 
 /**
- * get_path - Get the PATH environment variable
- * Return: The PATH environment variable
+ * get_path - variable
+ * Return: variable
  */
 char *get_path(void)
 {
 	char path_indic[] = "PATH=";
 	int i = 0;
-	
+
 	while (environ[i])
 	{
 		if (_strncmp(environ[i], path_indic, 5) == 0)
 		{
-			return environ[i];
+			return (environ[i]);
 		}
 		i++;
 	}
-	return NULL;
+	return (NULL);
 }
 
 /**
- * readline - Read a line from the standard input
- * Return: The input line
+ * readline -  input
+ * Return: line
  */
 char *readline(void)
 {
@@ -131,7 +132,7 @@ char *readline(void)
 	if (n == -1)
 	{
 		free(line);
-		return NULL;
+		return (NULL);
 	}
-	return line;
+	return (line);
 }

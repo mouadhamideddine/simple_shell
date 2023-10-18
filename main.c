@@ -1,6 +1,6 @@
 #include "main.h"
-/*
- * main - main
+/**
+ * main - the main function
  * @ac : ac
  * @argv: argv
  * Return: int
@@ -14,7 +14,7 @@ int main(int ac, char **argv)
 	char *path = NULL;
 	char *input = NULL;
 	(void)ac;
-	
+
 	while (1)
 	{
 		input = readline();
@@ -24,7 +24,7 @@ int main(int ac, char **argv)
 			{
 				write(STDOUT_FILENO, "\n", 1);
 			}
-			return status;
+			return (status);
 		}
 		path_token = is_path(input);
 		if (path_token == 1)
@@ -42,7 +42,7 @@ int main(int ac, char **argv)
 			exec_cmd(tokenized_path, argv, tokenized_input);
 			free_array(tokenized_input);
 			free_array(tokenized_path);
-		}		
+		}
 	}
-	return status;
+	return (status);
 }

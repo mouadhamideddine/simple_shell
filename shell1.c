@@ -1,9 +1,9 @@
 #include "main.h"
 
 /**
- * iswhite - Check if a character is a white space character
- * @c: The character to check
- * Return: -1 if it's white, 0 otherwise
+ * iswhite - Check
+ * @c: The
+ * Return: -1
  */
 int iswhite(char c)
 {
@@ -11,18 +11,19 @@ int iswhite(char c)
 	{
 		return (-1);
 	}
-	return 0;
+	return (0);
 }
 
 /**
- * strlen_forpath - Calculate the length of a string until the first white space character
- * @user_input: The input string
- * Return: Length of the string
+ * strlen_forpath - Calculate
+ * @user_input: The
+ * Return: Length
  */
 int strlen_forpath(char *user_input)
 {
 	int i = 0;
 	int length = 0;
+
 	if (!user_input)
 	{
 		perror("!user_input strlen_forpath");
@@ -36,13 +37,13 @@ int strlen_forpath(char *user_input)
 		length++;
 		i++;
 	}
-	return length;
+	return (length);
 }
 
 /**
- * free_array - Free a null-terminated array of strings and the array itself
- * @array: The array to be freed
- * Return: 0 for success
+ * free_array - Free
+ * @array: The array
+ * Return: 0
  */
 int free_array(char **array)
 {
@@ -50,7 +51,7 @@ int free_array(char **array)
 
 	if (array == NULL)
 	{
-		return 0;
+		return (0);
 	}
 
 	while (array[i])
@@ -61,13 +62,13 @@ int free_array(char **array)
 	}
 	free(array);
 	array = NULL;
-	return 0;
+	return (0);
 }
 
 /**
- * _strlen - Calculate the length of a string
- * @s: The string
- * Return: The length of the string
+ * _strlen - length
+ * @s:string
+ * Return: length
  */
 int _strlen(char *s)
 {
@@ -78,14 +79,14 @@ int _strlen(char *s)
 		longi++;
 	}
 
-	return longi;
+	return (longi);
 }
 
 /**
- * _strcpy - Copy one string into another
- * @dest: Destination string
- * @src: Source string
- * Return: Pointer to the destination string
+ * _strcpy - Copy
+ * @dest: string
+ * @src: string
+ * Return: string
  */
 char *_strcpy(char *dest, char *src)
 {
@@ -101,5 +102,5 @@ char *_strcpy(char *dest, char *src)
 		dest[x] = src[x];
 	}
 	dest[l] = '\0';
-	return dest;
+	return (dest);
 }

@@ -1,8 +1,8 @@
 #include "main.h"
 /**
- * _strdup - Duplicate a string and return a new pointer to the duplicate
- * @str: The string to duplicate
- * Return: Pointer to the duplicated string
+ * _strdup - Duplicate
+ * @str: The
+ * Return: Pointer
  */
 char *_strdup(char *str)
 {
@@ -11,7 +11,7 @@ char *_strdup(char *str)
 
 	if (str == NULL)
 	{
-		return NULL;
+		return (NULL);
 	}
 
 	size = _strlen(str) + 1;
@@ -19,19 +19,19 @@ char *_strdup(char *str)
 
 	if (dupl == NULL)
 	{
-		return NULL;
+		return (NULL);
 	}
 
 	_strcpy(dupl, str);
-	return dupl;
+	return (dupl);
 }
 
 /**
- * _strncmp - Compare the first n characters of two strings
- * @str_unknown_size: The unknown size string
- * @str_known_size: The known size string
- * @n: Number of characters to compare
- * Return: 0 if the strings match, -1 if there's a difference
+ * _strncmp - strings
+ * @str_unknown_size: string
+ * @str_known_size: string
+ * @n: characters to compare
+ * Return: 0
  */
 int _strncmp(char *str_unknown_size, char *str_known_size, int n)
 {
@@ -40,31 +40,31 @@ int _strncmp(char *str_unknown_size, char *str_known_size, int n)
 	if (!str_known_size || !str_unknown_size)
 	{
 		perror("_STRNCMP ERROR");
-		return 1;
+		return (1);
 	}
 	if (_strlen(str_unknown_size) < n)
 	{
 		perror("_STRNCMP n > str_unknown_size");
-		return 1;
+		return (1);
 	}
 	while (str_unknown_size[i] != '\0' && n > 0)
 	{
 		n--;
 		if (str_known_size[i] != str_unknown_size[i])
 		{
-			return -1; /* Difference */
+			return (-1); /* Difference */
 		}
 		i++;
 	}
-	return 0; /* Match */
+	return (0); /* Match */
 }
 
 /**
- * strcpy_path - Copy a string into another, adding a path separator, and part of a user input
- * @destination: Destination string
- * @source: Source string
- * @userinput: User input string
- * Return: Pointer to the destination string
+ * strcpy_path - input
+ * @destination: string
+ * @source: string
+ * @userinput: string
+ * Return: string
  */
 char *strcpy_path(char *destination, char *source, char *userinput)
 {
@@ -91,14 +91,14 @@ char *strcpy_path(char *destination, char *source, char *userinput)
 		i_dest++;
 	}
 	destination[i_dest] = '\0';
-	return destination;
+	return (destination);
 }
 
 /**
- * strdup_path - Duplicate a string while adding a path separator and part of a user input
- * @str: The string to duplicate
- * @user_input: User input string
- * Return: Pointer to the duplicated string
+ * strdup_path -  a user input
+ * @str: duplicate
+ * @user_input: string
+ * Return: string
  */
 char *strdup_path(char *str, char *user_input)
 {
@@ -107,7 +107,7 @@ char *strdup_path(char *str, char *user_input)
 
 	if (str == NULL)
 	{
-		return NULL;
+		return (NULL);
 	}
 
 	size = _strlen(str) + strlen_forpath(user_input) + 2; /* +1 only not +2 */
@@ -116,16 +116,16 @@ char *strdup_path(char *str, char *user_input)
 	if (dupl == NULL)
 	{
 		free(dupl);
-		return NULL;
+		return (NULL);
 	}
 	strcpy_path(dupl, str, user_input);
-	return dupl;
+	return (dupl);
 }
 
 /**
- * remove_PATH - Remove "PATH=" from an environment variable
- * @firsttoken: The environment variable
- * Return: Pointer to the modified string
+ * remove_PATH -environment variable
+ * @firsttoken: variable
+ * Return: string
  */
 char *remove_PATH(char *firsttoken)
 {

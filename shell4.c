@@ -1,9 +1,9 @@
 #include "main.h"
 /**
- * execute - Execute a command using execve
- * @token_array: An array of tokens representing the command
- * @argv: The program's arguments
- * Return: The exit status of the executed command
+ * execute - Execute
+ * @token_array:  command
+ * @argv: arguments
+ * Return: executed command
  */
 int execute(char **token_array, char **argv)
 {
@@ -22,21 +22,21 @@ int execute(char **token_array, char **argv)
 		{
 			perror(argv[0]);
 			free_array(token_array);
-			exit(EXIT_FAILURE);
+		    exit(EXIT_FAILURE);
 		}
 	}
 	else
 	{
 		waitpid(pid, &status, 0);
 	}
-	return WEXITSTATUS(status);
+	return (WEXITSTATUS(status));
 }
 
 /**
- * tokenizeline - Tokenize a string using the specified delimiters
- * @input: The input string
- * @delimiters: The delimiters to use
- * Return: Tokenized array of strings
+ * tokenizeline -  delimiters
+ * @input: string
+ * @delimiters: use
+ * Return: strings
  */
 char **tokenizeline(char *input, char *delimiters)
 {
@@ -48,9 +48,9 @@ char **tokenizeline(char *input, char *delimiters)
 
 	if (input == NULL)
 	{
-		return NULL;
+		return (NULL);
 	}
-	
+
 	str_copy = _strdup(input);
 	token = strtok(str_copy, delimiters);
 	while (token != NULL)
@@ -60,11 +60,12 @@ char **tokenizeline(char *input, char *delimiters)
 	}
 	free(str_copy);
 	str_copy = NULL;
-	tokenized_input = malloc(sizeof(char *) * (count_token + 1)); /* Removed the +1 but added again */
+	tokenized_input =
+		malloc(sizeof(char *) * (count_token + 1));
 	if (tokenized_input == NULL)
 	{
 		free(input);
-		return NULL;
+		return (NULL);
 	}
 	token = strtok(input, delimiters);
 	while (token != NULL)
@@ -76,15 +77,15 @@ char **tokenizeline(char *input, char *delimiters)
 	tokenized_input[i] = NULL;
 	free(input);
 	input = NULL;
-	return tokenized_input;
+	return (tokenized_input);
 }
 
 /**
- * execute_path - Execute a command with a specified path
- * @input_array: An array of tokens representing the command
- * @argv: The program's arguments
- * @path: The path to the executable
- * Return: The exit status of the executed command
+ * execute_path -  path
+ * @input_array: command
+ * @argv: arguments
+ * @path: executable
+ * Return: command
  */
 int execute_path(char **input_array, char **argv, char *path)
 {
@@ -110,13 +111,13 @@ int execute_path(char **input_array, char **argv, char *path)
 	{
 		waitpid(pid, &status, 0);
 	}
-	return WEXITSTATUS(status);
+	return (WEXITSTATUS(status));
 }
 
 /**
- * access_ok - Check if the current user has execute permission on any of the paths
- * @paths: An array of paths
- * Return: The index of a path with execute permission, -1 for no path, -2 for no permission
+ * access_ok -paths
+ * @paths: paths
+ * Return:  no permission
  */
 int access_ok(char **paths)
 {
@@ -126,7 +127,7 @@ int access_ok(char **paths)
 	if (!paths)
 	{
 		perror("NO PATH");
-		return -1;
+		return (-1);
 	}
 
 	while (paths[i])
@@ -134,7 +135,7 @@ int access_ok(char **paths)
 		permission = access(paths[i], X_OK);
 		if (permission == 0)
 		{
-			return i; 
+			return (i);
 		}
 		else
 		{
@@ -142,28 +143,30 @@ int access_ok(char **paths)
 		}
 		i++;
 	}
-	return -2;
+	return (-2);
 }
 
 /**
- * exec_cmd - Execute a command with a specified path if access permissions are granted
- * @paths: An array of paths
- * @argv: The program's arguments
- * @tokenized_input: An array of tokens representing the command
- * Return: 0 for success, -1 for failure
+ * exec_cmd -  granted
+ * @paths: aths
+ * @argv: arguments
+ * @tokenized_input: the command
+ * Return: 0
  */
 int exec_cmd(char **paths, char **argv, char **tokenized_input)
 {
 	int index;
+
 	index = access_ok(paths);
+
 	if (index >= 0)
 	{
 		execute_path(tokenized_input, argv, paths[index]);
 	}
 	else if (index < 0)
 	{
-		return -1;
+		return (-1);
 	}
 
-	return 0; /* Success */
+	return (0); /* Success */
 }
