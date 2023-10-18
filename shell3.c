@@ -1,26 +1,5 @@
 #include "main.h"
 /**
- * print2DArray -strings
- * @arr:array
- */
-void print2DArray(char ***arr)
-{
-	int row = 0;
-	int col = 0;
-
-	while (arr[row] != NULL)
-	{
-		while (arr[row][col] != NULL)
-		{
-			printf("2D%s \n", arr[row][col]);
-			col++;
-		}
-		printf("\n");
-		row++;
-	}
-}
-
-/**
  * tokenize_path -delimiter
  * @fullpath: string
  * @user_input: string
