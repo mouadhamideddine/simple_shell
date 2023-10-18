@@ -550,7 +550,12 @@ int exec_cmd(char **paths, char **argv, char **tokenized_input)
 
 	return 0; /* Success */
 }
-
+/*
+ * main - main
+ * @ac : ac
+ * @argv: argv
+ * Return: int
+ */
 int main(int ac, char **argv)
 {
 	char delimiters[] = {' ', '\t', '\n', '\0'};
