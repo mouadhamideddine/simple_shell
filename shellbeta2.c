@@ -21,7 +21,6 @@ int strlen_forpath(char *user_input)
 {
     int i = 0;
     int length = 0;
-    int leading_whitespace = 0;
     if (!user_input)
     {
         perror("!user_input strlen_forpath");
@@ -130,7 +129,7 @@ int _strncmp(char *str_unknown_size, char *str_known_size, int n)
         perror("_STRNCMP ERROR");
         return (1);
     }
-    if(strlen(str_unknown_size) < n)
+    if(_strlen(str_unknown_size) < n)
     {
         perror("_STRNCMP n > str_unkonw_size");
         return (1);
@@ -157,7 +156,6 @@ char *strcpy_path(char *destination, char *source, char *userinput)
     int i_dest = 0;
     int i_userinput = 0;
     int i_source = 0;
-    int token = 0;
 
     while(source[i_source])
     {
@@ -196,7 +194,6 @@ char *strdup_path(char *str, char *user_input)
 	}
 
 	size = _strlen(str) + strlen_forpath(user_input) + 2; /*+1 only not +2*/
-    //printf("sizepath = %d sizeuser_input = %d\n", _strlen(str), _strlen(user_input));
 	dupl = malloc(size * sizeof(char));
 
 	if (dupl == NULL)
@@ -235,14 +232,12 @@ char** tokenize_path(char *fullpath, char*user_input)
     {
         return(NULL);
     }
-    //printf("full path = %s\n",fullpath);
     
     path_copy = _strdup(fullpath);
     token = strtok(path_copy, ":");
-    //printf("token = %s\n", token);
+    
     while(token != NULL)
     {
-        //printf("token = %s\n", token);
         count_token++;
         token = strtok(NULL, ":");
     }
@@ -251,55 +246,46 @@ char** tokenize_path(char *fullpath, char*user_input)
     tokenized_fullpath = malloc(sizeof(char *) * (count_token + 1)); /* for NULL*/
     if (tokenized_fullpath == NULL)
     {
-        /*free(fullpath); reason it's environ[i]*/
         return(NULL);
     }
     path_copy = _strdup(fullpath);
     token = strtok(path_copy, ":");
     token = remove_PATH(token);
-    //printf("token = %s\n", token);
     while (token != NULL)
     {
         tokenized_fullpath[i] = strdup_path(token, user_input);
-        //printf("tokenized_fullpath[i] = %s\n",tokenized_fullpath[i]);
         token = strtok(NULL, ":");
         i++;
     }
-    //printf("tokenized_fullpath[i] = %s\n",tokenized_fullpath[5]);
     tokenized_fullpath[i] = NULL;
     free(path_copy);
     path_copy = NULL;
-    //print2DArray(&tokenized_fullpath);
-    /*free(fullpath); /*reason it's environ[i]*/
-    /*fullpath = NULL; /*reason it's environ[i]*/
+    /*free(fullpath); reason it's environ[i]*/
+    /*fullpath = NULL; reason it's environ[i]*/
     return (tokenized_fullpath); /*a tokenized full path ready for access*/
 } 
 int is_path(char *input)
 {
     int i = 0;
-    //printf("started is_path");
     if (!input)
     {
         return (-1);/*invalid input*/
     }
     while(input[i])
     {
-        //printf("inside while is_path");
         if(input[i] == '\\' || (input[i] == '/'))
         {
-            //printf("if(input[i] == '\\' || (input[i] == '/'))");
             return (1); /*path*/
         }
         i++;
     }
-    //printf("not path");
     return(0); /*not path*/
 }
 char *get_path(void)
 {
     char path_indic[] = "PATH=";
     int i = 0;
-    //printf("getpath");
+    
     while(environ[i])
     {
         if(_strncmp(environ[i],path_indic, 5) == 0)
@@ -312,7 +298,6 @@ char *get_path(void)
 }
 char *readline(void)
 {
-    //printf("here");
     char *line = NULL;
     size_t len = 0;
     ssize_t n;
@@ -321,16 +306,12 @@ char *readline(void)
     {
         write(STDOUT_FILENO, "$ ", 2);
     }
-    //printf("dollar write");
     n = getline(&line, &len, stdin);
-    //printf("line from getline %s", line);
     if (n == -1)
     {
         free(line);
         return(NULL);
     }
-    //printf("%s", line);
-    //printf("readline finished");
     return(line);
 }
 
@@ -352,16 +333,13 @@ int execute(char **token_array, char **argv)
         if(execve(token_array[0], token_array, environ) == -1)
         {
             perror(argv[0]);
-            free_array(token_array); //HWC
-            //token_array = NULL;
+            free_array(token_array);
             exit(EXIT_FAILURE);
         }
     }
     else
     {
         waitpid(pid, &status, 0);
-        //free_array(token_array); //HWC
-        //token_array = NULL;
     }
     return (WEXITSTATUS(status));
 }
@@ -421,16 +399,13 @@ int execute_path(char **input_array, char **argv, char *path)
         if(execve(path, input_array, environ) == -1)
         {
             perror(argv[0]);
-            free_array(input_array); //HWC
-            //input_array = NULL;
+            free_array(input_array);
             exit(EXIT_FAILURE);
         }
     }
     else
     {
         waitpid(pid, &status, 0);
-        //free_array(input_array); //HWC
-        //input_array = NULL;
     }
     return (WEXITSTATUS(status));
 }
@@ -448,16 +423,14 @@ int access_ok(char **paths)
 
     while(paths[i])
     {
-        //printf("paths[i] = %s" , paths[i]);
         permission = access(paths[i], X_OK);
-        //printf("permission = %d\n",permission);
         if(permission == 0)
         {
-            return(i); /*to access it in array*/
+            return(i); 
         }
         else
         {
-            ;//perror("Access error");
+            ;
         }
         i++;
     }
@@ -465,12 +438,8 @@ int access_ok(char **paths)
 }
 int exec_cmd(char **paths, char **argv,char **tokenized_input)
 {
-    pid_t pid;
-    int status;
     int index;
-    //print2DArray(&paths);
     index = access_ok(paths);
-    //printf("index = %d\n", index);
     if(index >= 0)
     {
         execute_path(tokenized_input, argv, paths[index]);
@@ -486,40 +455,28 @@ int exec_cmd(char **paths, char **argv,char **tokenized_input)
 
 int main(int ac, char **argv)
 {
-	(void)ac;
-    int path_token;
-	char *input = NULL;
-	size_t input_size = 0;
 	char delimiters[] = {' ', '\t', '\n', '\0'};
-	char dollar[] = {"$ "};
 	char **tokenized_input = NULL;
     char **tokenized_path = NULL;
-	int status = 0;
+	int status = 0, path_token;
     char *path = NULL;
-	ssize_t read;
-
+    char *input = NULL;
+    (void)ac;
+    
 	while (1)
 	{
-        //printf("path = %s", path);
-        //printf("here");
 		input = readline();
-        //printf("input from main = %s",input);
 		if (input == NULL)
 		{
 			if(isatty(STDIN_FILENO))
 			{
 				write(STDOUT_FILENO, "\n", 1);
 			}
-            //printf("here");
-			/*free(input);*/
 			return(status);
 		}
-        //printf("input for is_path = %s\n", input);
         path_token = is_path(input);
-        //printf("path token value = %d\n", path_token);
         if(path_token == 1)
         {
-            //printf("path_token = 1");
             tokenized_input = tokenizeline(input, delimiters);
             execute(tokenized_input, argv);
             free_array(tokenized_input);
@@ -527,19 +484,12 @@ int main(int ac, char **argv)
         }
         else if(path_token == 0)
         {
-            //printf("path_token = 0\n");
             path = get_path();
-            //printf("path = %s\n",path);
             tokenized_path = tokenize_path(path,input);
-            //printf("tokenized_path %s\n", tokenized_path[0]);
-            //print2DArray(&tokenized_path);
             tokenized_input = tokenizeline(input, delimiters);
-            //printf("tokenized_path %s\n", tokenized_input[1]);
-            //print2DArray(&tokenized_path);
             exec_cmd(tokenized_path, argv,tokenized_input);
             free_array(tokenized_input);
             free_array(tokenized_path);
-            //printf("path = %s", path);
         }		
 	}
 	return (status);
