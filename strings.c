@@ -1,5 +1,5 @@
 #include "main.h"
-#include <stdlib.h>
+
 /**
  * _strlen - calculate str length
  * @s : string
@@ -65,3 +65,70 @@ char *_strdup(char *str)
 	_strcpy(dupl, str);
 	return (dupl);
 }
+char** tokenizeline(char* input, char* delimiters)
+{
+    char **tokenized_input = NULL;
+    char *str_copy = NULL;
+    char *token = NULL;
+    int count_token = 0;
+    int i = 0;
+
+    if (input == NULL)
+    {
+        return(NULL);
+    }
+    
+    str_copy = _strdup(input);
+    token = strtok(str_copy, delimiters);
+    while(token != NULL)
+    {
+        count_token++;
+        token = strtok(NULL, delimiters);
+    }
+    free(str_copy);
+    str_copy = NULL;
+    tokenized_input = malloc(sizeof(char *) * (count_token + 1)); /*removed the +1 but add again*/
+    if (tokenized_input == NULL)
+    {
+        free(input);
+        return(NULL);
+    }
+    token = strtok(input, delimiters);
+    while (token != NULL)
+    {
+        tokenized_input[i] = _strdup(token);
+        token = strtok(NULL, delimiters);
+        i++;
+    }
+    tokenized_input[i] = NULL;
+    free(input);
+    input = NULL;
+    return (tokenized_input);
+} 
+
+int _strncmp(char *str_unknown_size, char *str_known_size, int n)
+{
+    int i = 0;
+
+    if(!str_known_size || !str_unknown_size)
+    {
+        perror("_STRNCMP ERROR");
+        return (1);
+    }
+    if(strlen(str_unknown_size) < n)
+    {
+        perror("_STRNCMP n > str_unkonw_size");
+        return (1);
+    }
+    while(str_unknown_size[i] != '\0' && n > 0)
+    {
+        n--;
+        if(str_known_size[i] != str_unknown_size[i])
+        {
+            return(-1); /*difference*/
+        }
+        i++;
+    }
+    return (0); /*match*/
+}
+

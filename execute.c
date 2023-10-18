@@ -1,13 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include "main.h"
-/**
- * 
-*/
-extern char **environ;
 
 int execute(char **token_array, char **argv)
 {

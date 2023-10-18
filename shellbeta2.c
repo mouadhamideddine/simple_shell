@@ -7,6 +7,36 @@
 
 
 extern char **environ;
+
+int iswhite(char c) 
+{
+    if (c == ' ' || c == '\t' || c == '\n')
+    {
+        return(-1);
+    }
+    return(0);
+}
+
+int strlen_forpath(char *user_input)
+{
+    int i = 0;
+    int length = 0;
+    int leading_whitespace = 0;
+    if (!user_input)
+    {
+        perror("!user_input strlen_forpath");
+    }
+    while(user_input[i] && iswhite(user_input[i]) == -1)
+    {
+        i++;
+    }
+    while(user_input[i] && iswhite(user_input[i] == 0))
+    {
+        length++;
+        i++;
+    }
+    return(length);
+}
 int free_array(char **array)
 {
     int i = 0;
@@ -122,28 +152,33 @@ int _strncmp(char *str_unknown_size, char *str_known_size, int n)
  * @src : source
  * Return: Pointer to str
  */
-char *strcpy_path(char *dest, char *src, char *user_input)
+char *strcpy_path(char *destination, char *source, char *userinput)
 {
-	int l = 0;
-	int x = 0;
-    int i = 0;
+    int i_dest = 0;
+    int i_userinput = 0;
+    int i_source = 0;
+    int token = 0;
 
-	while (src[l] != '\0')
-	{
-		l++;
-	}
-	for ( ; x < l ; x++)
-	{
-		dest[x] = src[x];
-	}
-	dest[l++] = '/';
-    while(user_input[i])
+    while(source[i_source])
     {
-        dest[l++] = user_input[i];
-        i++;
+        destination[i_dest] = source[i_source];
+        i_source++;
+        i_dest++;
     }
-    dest[l++] = '\0';
-	return (dest);
+    destination[i_dest] = '/';
+    i_dest++;
+    while(userinput[i_userinput] && iswhite(userinput[i_userinput] == -1))
+    {
+        i_userinput++;
+    }
+    while(userinput[i_userinput] && iswhite(userinput[i_userinput])  == 0)
+    {
+        destination[i_dest] = userinput[i_userinput];
+        i_userinput++;
+        i_dest++;
+    }
+    destination[i_dest] = '\0';
+    return(destination);
 }
 /**
  * strdup_path - strdup
@@ -160,7 +195,7 @@ char *strdup_path(char *str, char *user_input)
 		return (NULL);
 	}
 
-	size = _strlen(str) + _strlen(user_input) + 2; /*+1 only not +2*/
+	size = _strlen(str) + strlen_forpath(user_input) + 2; /*+1 only not +2*/
     //printf("sizepath = %d sizeuser_input = %d\n", _strlen(str), _strlen(user_input));
 	dupl = malloc(size * sizeof(char));
 
@@ -213,7 +248,7 @@ char** tokenize_path(char *fullpath, char*user_input)
     while (token != NULL)
     {
         tokenized_fullpath[i] = strdup_path(token, user_input);
-        //printf("tokenized_fullpath[i] = %s\n",tokenized_fullpath[i]);
+        printf("tokenized_fullpath[i] = %s\n",tokenized_fullpath[i]);
         token = strtok(NULL, ":");
         i++;
     }
@@ -398,9 +433,9 @@ int access_ok(char **paths)
 
     while(paths[i])
     {
-        printf("paths[i] = %sfoll", paths[i]);
+        //printf("paths[i] = %s" , paths[i]);
         permission = access(paths[i], X_OK);
-        printf("permission = %d\n",permission);
+        //printf("permission = %d\n",permission);
         if(permission == 0)
         {
             return(i); /*to access it in array*/
@@ -420,7 +455,7 @@ int exec_cmd(char **paths, char **argv,char **tokenized_input)
     int index;
 
     index = access_ok(paths);
-    printf("index = %d\n", index);
+    //printf("index = %d\n", index);
     if(index >= 0)
     {
         execute_path(tokenized_input, argv, paths[index]);
