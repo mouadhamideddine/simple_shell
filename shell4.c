@@ -20,7 +20,7 @@ int execute(char **token_array, char **argv)
 	{
 		if (execve(token_array[0], token_array, environ) == -1)
 		{
-			/*perror(argv[0]);*/
+			perror(argv[0]);
 			free_array(token_array);
 		    exit(EXIT_FAILURE);
 		}
